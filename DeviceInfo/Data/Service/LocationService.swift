@@ -18,15 +18,12 @@ protocol LocationServiceProtocol {
 // MARK: - LocationService
 final class LocationService: NSObject {
     private let locationManager = CLLocationManager()
-    let locationSubject = CurrentValueSubject<(coordinate: [Double], name: String?)?, Never>(nil)
+    let locationSubject = PassthroughSubject<(coordinate: [Double], name: String?), Never>()
     private let errorSubject = PassthroughSubject<Error, Never>()
     private let geocoder = CLGeocoder()
-    private var hasSentLocation = false
 
     var locationPublisher: AnyPublisher<(coordinate: [Double], name: String?), Never> {
-        locationSubject
-            .compactMap { $0 }
-            .eraseToAnyPublisher()
+        locationSubject.eraseToAnyPublisher()
     }
 
     var locationErrorPublisher: AnyPublisher<Error, Never> {
@@ -36,25 +33,13 @@ final class LocationService: NSObject {
     override init() {
         super.init()
         locationManager.delegate = self
-        locationManager.allowsBackgroundLocationUpdates = true
-        locationManager.pausesLocationUpdatesAutomatically = false
     }
 }
 
 // MARK: - LocationServiceProtocol Implementation
 extension LocationService: LocationServiceProtocol {
     func requestLocation() {
-        hasSentLocation = false
-        let status = locationManager.authorizationStatus
-        
-        switch status {
-        case .authorizedWhenInUse, .authorizedAlways:
-            locationManager.startUpdatingLocation()
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        default:
-            errorSubject.send(CLError(.denied))
-        }
+        locationManagerDidChangeAuthorization(locationManager)
     }
 }
     
@@ -62,22 +47,24 @@ extension LocationService: LocationServiceProtocol {
 extension LocationService: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         let status = manager.authorizationStatus
-        if status == .authorizedWhenInUse || status == .authorizedAlways {
-            hasSentLocation = false
+        switch status {
+        case .authorizedWhenInUse, .authorizedAlways:
             locationManager.startUpdatingLocation()
-        } else if status == .denied || status == .restricted {
+        case .denied, .restricted:
             errorSubject.send(CLError(.denied))
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        @unknown default:
+            break
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard !hasSentLocation,
-              let location = locations.last,
+        guard let location = locations.last,
               location.horizontalAccuracy >= 0 else {
             return
         }
         
-        hasSentLocation = true
         manager.stopUpdatingLocation()
         
         geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
