@@ -10,4 +10,5 @@ import Foundation
 enum Constants {
     static let postURL = URL(string: "https://your-server.com/api/device")!
     static let encryptionKey = "1234567890123456"
+    static let locationDenied = "Location permission denied. Please enable it in Settings ➜ Location Services."
 }

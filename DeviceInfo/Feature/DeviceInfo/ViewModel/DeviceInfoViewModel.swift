@@ -40,10 +40,9 @@ final class DeviceInfoViewModel: ObservableObject {
     }
 
     func openAppSettings() {
-        guard let url = URL(string: UIApplication.openSettingsURLString),
-              UIApplication.shared.canOpenURL(url) else { return }
-
-        UIApplication.shared.open(url)
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url)
+        }
     }
 }
 
@@ -60,17 +59,18 @@ private extension DeviceInfoViewModel {
         locationService.locationErrorPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
-                if let error = error as? CLError, error.code == .denied {
-                    self?.errorMessage = "Location permission denied. Please enable it in Settings ➜ Location Services."
-                } else {
-                    self?.errorMessage = error.localizedDescription
-                }
+                guard let self = self else { return }
+                self.errorMessage = self.isLocationDenied(error)
+                ? Constants.locationDenied : error.localizedDescription
             }
             .store(in: &cancellables)
     }
     
+    func isLocationDenied(_ error: Error) -> Bool {
+        (error as? CLError)?.code == .denied
+    }
+    
     func loadInfo(with location: (coordinate: [Double], name: String?)) {
-        deviceInfo = nil
         errorMessage = nil
 
         collector.fetchDeviceInfo(with: location)
