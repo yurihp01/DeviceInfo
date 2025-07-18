@@ -1,5 +1,5 @@
 //
-//  DeviceInfoCardView.swift
+//  DeviceInfoCard.swift
 //  DeviceInfo
 //
 //  Created by Yuri on 17/07/25.

@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  DeviceInfoView.swift
 //  DeviceInfo
 //
 //  Created by Yuri on 17/07/25.
