@@ -17,13 +17,13 @@ final class DeviceInfoViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     private let collector: DeviceInfoCollectorProtocol
-    private let locationService: LocationService
+    private let locationService: LocationServiceProtocol
     private let network: NetworkServiceProtocol
     private let crypto: CryptoServiceProtocol
     
     init(
         collector: DeviceInfoCollectorProtocol = DeviceInfoCollector(),
-        locationService: LocationService = LocationService(),
+        locationService: LocationServiceProtocol = LocationService(),
         network: NetworkServiceProtocol = NetworkService(),
         crypto: CryptoServiceProtocol = CryptoService()
     ) {

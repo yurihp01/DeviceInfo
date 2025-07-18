@@ -18,7 +18,7 @@ protocol LocationServiceProtocol {
 // MARK: - LocationService
 final class LocationService: NSObject {
     private let locationManager = CLLocationManager()
-    private let locationSubject = CurrentValueSubject<(coordinate: [Double], name: String?)?, Never>(nil)
+    let locationSubject = CurrentValueSubject<(coordinate: [Double], name: String?)?, Never>(nil)
     private let errorSubject = PassthroughSubject<Error, Never>()
     private let geocoder = CLGeocoder()
     private var hasSentLocation = false

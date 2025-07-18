@@ -33,6 +33,7 @@
 				Data/Service/NetworkUtility.swift,
 				Feature/DeviceInfo/View/DeviceInfoCard.swift,
 				Feature/DeviceInfo/ViewModel/DeviceInfoViewModel.swift,
+				Utils/Constants.swift,
 			);
 			target = DA99A96A2E2918750000CE14 /* DeviceInfoTests */;
 		};
@@ -40,6 +41,17 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				info.plist,
+			);
+			target = DA99A95D2E2918740000CE14 /* DeviceInfo */;
+		};
+		DA99AAE72E29EEBC0000CE14 /* Exceptions for "DeviceInfoTests" folder in "DeviceInfo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Mocks/MockCryptoService.swift,
+				Mocks/MockDeviceInfoCollector.swift,
+				Mocks/MockLocationService.swift,
+				Mocks/MockNetworkService.swift,
+				Mocks/MockNetworkUtility.swift,
 			);
 			target = DA99A95D2E2918740000CE14 /* DeviceInfo */;
 		};
@@ -57,6 +69,9 @@
 		};
 		DA99A96E2E2918750000CE14 /* DeviceInfoTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DA99AAE72E29EEBC0000CE14 /* Exceptions for "DeviceInfoTests" folder in "DeviceInfo" target */,
+			);
 			path = DeviceInfoTests;
 			sourceTree = "<group>";
 		};
