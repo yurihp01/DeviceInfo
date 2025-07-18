@@ -52,7 +52,8 @@ Edit the `Constants.swift` file to change the key and endpoint:
 ```swift
 struct Constants {
     static let endpointURL = "https://yourserver.com/submit"
-    static let encryptionKey = "1234567890abcdef" // Must be 16 characters
+    static let encryptionKey = "1234567890abcdef"
+    static let locationDenied = "Location permission denied. Please enable it in Settings ➜ Location Services."
 }
 ```
 
